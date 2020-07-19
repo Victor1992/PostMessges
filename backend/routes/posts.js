@@ -4,6 +4,7 @@ const express = require('express');
 
 const router = express.Router();
 
+const checkAuth = require("../middleware/check-auth");
 
 router.get("", (req, res, next) => {
     Post.find().then(documents => {
@@ -25,7 +26,7 @@ router.get("/:id", (req, res) => {
     })
 })
 
-router.put("/:id", (req, res) => {
+router.put("/:id", checkAuth, (req, res) => {
     const post = new Post({
         _id: req.body.id,
         title: req.body.title,
@@ -37,7 +38,7 @@ router.put("/:id", (req, res) => {
         })
 })
 
-router.post("", (req, res, next) => {
+router.post("", checkAuth, (req, res, next) => {
 
     const post = new Post({
         title: req.body.title,
@@ -53,7 +54,7 @@ router.post("", (req, res, next) => {
 });
 
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", checkAuth, (req, res) => {
     Post.deleteOne({ _id: req.params.id }).then(result => {
         console.log(result);
         res.status(200).json({ message: "Post Deleted" });
